@@ -2,9 +2,11 @@ name: Deploy Django to EC2
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
   pull_request:
-    branches: ["main"]
+    branches:
+      - main
 
 jobs:
   deploy:
@@ -30,21 +32,23 @@ jobs:
           docker tag my-django-app:latest ${{ secrets.DOCKER_USERNAME }}/my-django-app:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/my-django-app:latest
 
-      - name: Deploy to EC2
-        env:
-          EC2_HOST: ${{ secrets.EC2_HOST }}
-          EC2_USER: ${{ secrets.EC2_USER }}
-          EC2_KEY: ${{ secrets.EC2_KEY }}
-          DOCKER_COMPOSE_FILE: ${{ secrets.DOCKER_COMPOSE_FILE }}
+      - name: Prepare EC2 Key
         run: |
           echo "${{ secrets.EC2_KEY }}" > ec2_key.pem
           chmod 600 ec2_key.pem
 
-          # Create docker-compose file on EC2
-          ssh -i ec2_key.pem $EC2_USER@$EC2_HOST "echo '${{ secrets.DOCKER_COMPOSE_FILE }}' > docker-compose.yml"
+      - name: Add EC2 host to known_hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-          # Pull latest Docker image and restart containers
-          ssh -i ec2_key.pem $EC2_USER@$EC2_HOST << 'EOF'
+      - name: Copy Docker Compose file to EC2
+        run: |
+          echo "${{ secrets.DOCKER_COMPOSE_FILE }}" > docker-compose.yml
+          scp -o StrictHostKeyChecking=no -i ec2_key.pem docker-compose.yml ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:~
+
+      - name: Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
           docker-compose down
           docker-compose pull
           docker-compose up -d
