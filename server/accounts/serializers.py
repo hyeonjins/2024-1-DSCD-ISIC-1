@@ -37,10 +37,20 @@ class CustomRegisterSerializer(RegisterSerializer):
         return user    
     
 class ProfileSerializer(serializers.ModelSerializer):
-    double_major = serializers.CharField(required=False)
-    award_detail = serializers.CharField(required=False)
-    club_detail = serializers.CharField(required=False)
-    project_detail = serializers.CharField(required=False)
     class Meta:
         model = Profile
         fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(ProfileSerializer, self).__init__(*args, **kwargs)
+        # 모든 CharField 인스턴스에 대해 allow_blank=True 적용
+        for field in self.fields.values():
+            if isinstance(field, serializers.CharField):
+                field.allow_blank = True
+
+    def validate(self, attrs):
+        # 모든 CharField에 대해서 "해당 없음" 입력을 빈 문자열로 변환
+        for field_name, field in self.fields.items():
+            if isinstance(field, serializers.CharField) and attrs.get(field_name) == "해당 없음":
+                attrs[field_name] = ""
+        return attrs
