@@ -156,7 +156,8 @@ CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ORIGIN_WHITELIST = [
-    "https://dongguk-babbeoli.site"
+    'https://www.dongguk-babbeoli.site',
+    'https://dongguk-babbeoli.site',
 ]
 
 #HTTP methods 추가
