@@ -152,12 +152,11 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # CORS 설정 추가
-CORS_ALLOW_ALL_ORIGINS = True #(모든 포트 허용)
+CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ORIGIN_WHITELIST = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173"
+    "https://dongguk-babbeoli.site"
 ]
 
 #HTTP methods 추가
