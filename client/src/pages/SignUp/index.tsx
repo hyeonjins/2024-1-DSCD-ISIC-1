@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageLayout } from "@/components/PageLayout";
 import { Header } from "@/components/common/Header";
@@ -18,6 +18,7 @@ interface SignUpResponse {
 export const SignUp = () => {
   const navigate = useNavigate();
   const [status, setStatus] = useState<boolean>(true);
+  const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const [user, setUser] = useState<RequestSignUpParams>({
     username: "",
     password1: "",
@@ -28,6 +29,7 @@ export const SignUp = () => {
     email: "",
     phone_number: "",
   });
+
   const handleStatus = () => {
     setStatus((cur) => !cur);
     setUser((cur: RequestSignUpParams) => ({
@@ -35,12 +37,29 @@ export const SignUp = () => {
       sex: status ? "여자" : "남자",
     }));
   };
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUser((cur: RequestSignUpParams) => ({
       ...cur,
       [e.target.name]: e.target.value,
     }));
   };
+
+  useEffect(() => {
+    const validateForm = () => {
+      const isValid =
+        user.username &&
+        user.password1 &&
+        user.password2 &&
+        user.last_name &&
+        user.first_name &&
+        user.email &&
+        user.phone_number &&
+        user.password1 === user.password2;
+      setIsFormValid(isValid);
+    };
+    validateForm();
+  }, [user]);
 
   const successCallback = () => {
     navigate("/login");
@@ -51,6 +70,11 @@ export const SignUp = () => {
     "회원가입 성공",
     successCallback
   );
+
+  const handleSubmit = () => {
+    if (!isFormValid) return;
+    onSubmit(user);
+  };
 
   return (
     <PageLayout $justifyContent="start">
@@ -72,11 +96,12 @@ export const SignUp = () => {
         <Input
           width="98%"
           height="35px"
-          defaultString="jang99"
+          defaultString="아이디를 입력해주세요."
           $type="text"
           $radius="6px"
           name="username"
           onChange={onChange}
+          $isRequired={true}
         />
         <Text color="black" size="16px" $selfProps="flex-start">
           비밀번호
@@ -84,11 +109,12 @@ export const SignUp = () => {
         <Input
           width="98%"
           height="35px"
-          defaultString="⦁⦁⦁⦁⦁⦁⦁⦁⦁⦁"
+          defaultString="비밀번호를 입력해주세요."
           $type="password"
           $radius="6px"
           name="password1"
           onChange={onChange}
+          $isRequired={true}
         />
         <Text color="black" size="16px" $selfProps="flex-start">
           비밀번호 확인
@@ -96,11 +122,12 @@ export const SignUp = () => {
         <Input
           width="98%"
           height="35px"
-          defaultString="⦁⦁⦁⦁⦁⦁⦁⦁⦁⦁"
+          defaultString="비밀번호를 다시 한 번 입력해주세요."
           $type="password"
           $radius="6px"
           name="password2"
           onChange={onChange}
+          $isRequired={true}
         />
         <Text color="black" size="16px" $selfProps="flex-start">
           성
@@ -108,11 +135,12 @@ export const SignUp = () => {
         <Input
           width="98%"
           height="35px"
-          defaultString="홍"
+          defaultString="성씨를 입력해주세요."
           $type="text"
           $radius="6px"
           name="first_name"
           onChange={onChange}
+          $isRequired={true}
         />
         <Text color="black" size="16px" $selfProps="flex-start">
           이름
@@ -120,11 +148,12 @@ export const SignUp = () => {
         <Input
           width="98%"
           height="35px"
-          defaultString="길동"
+          defaultString="이름을 입력해주세요."
           $type="text"
           $radius="6px"
           name="last_name"
           onChange={onChange}
+          $isRequired={true}
         />
         <Text color="black" size="16px" $selfProps="flex-start">
           성별
@@ -161,11 +190,12 @@ export const SignUp = () => {
         <Input
           width="98%"
           height="35px"
-          defaultString="323psh@dongguk.edu"
+          defaultString="이메일을 입력해주세요."
           $type="text"
           $radius="6px"
           name="email"
           onChange={onChange}
+          $isRequired={true}
         />
         <Text color="black" size="16px" $selfProps="flex-start">
           전화번호
@@ -173,21 +203,23 @@ export const SignUp = () => {
         <Input
           width="98%"
           height="35px"
-          defaultString="01012341234"
+          defaultString="전화번호를 입력해주세요."
           $type="text"
           $radius="6px"
           name="phone_number"
           onChange={onChange}
+          $isRequired={true}
         />
         <Button
           margin="20px 0px 2rem 0px"
           width="100%"
           height="50px"
-          backgroundColor="#4D3E3E"
+          backgroundColor={isFormValid ? "#4D3E3E" : "#cccccc"}
           radius="5px"
           color="white"
-          onClick={() => onSubmit(user)}
+          onClick={handleSubmit}
           isCursor={true}
+          disabled={!isFormValid}
         >
           회원가입
         </Button>
