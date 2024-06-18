@@ -1,6 +1,7 @@
 import * as S from "./Article.styled";
 import { Divider } from "../Divider";
 import { Text } from "../common/Text";
+import { Link } from "react-router-dom";
 export const Artice = () => {
   return (
     <S.ArticleWrapper>
@@ -13,11 +14,12 @@ export const Artice = () => {
         <Text color="black" size="0.8rem">
           아이디가 없으신가요?
         </Text>
-        <Text color="black" size="0.8rem" decoration="underline">
-          회원가입 하기
+        <Text color="black" size="0.8rem" $decoration="underline">
+          <Link to={"/signUp"} style={{ color: "black" }}>
+            회원가입 하기
+          </Link>
         </Text>
       </S.Span>
-
       <S.Footer>
         <Text color="black" size="0.5rem">
           dev by ISIC

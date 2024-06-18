@@ -28,9 +28,8 @@ jobs:
       - name: Build and push Docker image
         run: |
           cd server
-          docker build -t my-django-app:latest .
-          docker tag my-django-app:latest ${{ secrets.DOCKER_USERNAME }}/my-django-app:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/my-django-app:latest
+            docker build -t ${{ secrets.DOCKER_USERNAME }}/isic:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/isic:latest
 
       - name: Prepare EC2 Key
         run: |

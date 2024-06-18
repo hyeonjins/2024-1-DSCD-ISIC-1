@@ -1,11 +1,16 @@
 export interface BoxProps {
   children?: React.ReactNode;
-  width: string;
-  height: string;
+  width?: string;
+  height?: string;
   margin?: string;
-  padding?: string;
+  border?: string;
+  $padding?: string;
   radius?: string;
-  backgroundColor?: string;
+  $backgroundColor?: string;
   color?: string;
   fontSize?: number;
+  $flexDirection?: string;
+  $justifyProps?: string;
+  $shadow?: string;
+  $gap?: string;
 }

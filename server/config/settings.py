@@ -49,10 +49,12 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'corsheaders',
+    'sslserver',
 
     # 앱
     "accounts", # 유저 정보 관련 기능
     "matching", # 선배 매칭 관련 기능
+    "recommendation" # 직업 추천 관련 기능
 ]
 
 REST_USE_JWT = True # jwt 사용 여부
@@ -72,12 +74,11 @@ REST_AUTH = {
 
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
 SITE_ID = 1
-REST_USE_JWT = True
 ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username' # User 모델의 username 변경 x
 ACCOUNT_EMAIL_REQUIRED = False          # email 필드 사용 x
 ACCOUNT_USERNAME_REQUIRED = True        # username 필드 사용 o
@@ -151,12 +152,12 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # CORS 설정 추가
-CORS_ALLOW_ALL_ORIGINS = True #(모든 포트 허용)
+CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ORIGIN_WHITELIST = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173"
+    'https://www.dongguk-babbeoli.site',
+    'https://dongguk-babbeoli.site',
 ]
 
 #HTTP methods 추가
@@ -191,7 +192,14 @@ USE_I18N = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

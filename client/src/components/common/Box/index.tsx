@@ -7,11 +7,16 @@ export const Box = (props: BoxProps) => {
       width={props.width}
       height={props.height}
       margin={props.margin}
-      padding={props.padding}
+      border={props.border}
+      $padding={props.$padding}
       radius={props.radius}
       color={props.color}
       fontSize={props.fontSize}
-      backgroundColor={props.backgroundColor}
+      $backgroundColor={props.$backgroundColor}
+      $flexDirection={props.$flexDirection}
+      $justifyProps={props.$justifyProps}
+      $shadow={props.$shadow}
+      $gap={props.$gap}
     >
       {props.children}
     </S.Box>
